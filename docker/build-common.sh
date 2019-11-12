@@ -212,6 +212,19 @@ docker_from_openjdk() {
 	esac
 }
 
+docker_from_opensuse() {
+	local a="$(get_arch $(uname -m))"
+
+	case "${a}" in
+		amd64) echo "opensuse/leap:15.1" ;;
+		arm64) echo "arm64v8/opensuse/leap:15.1" ;;
+		*)
+			echo "${script_name}: ERROR: Unknown arch ${a}" >&2
+			exit 1
+			;;
+	esac
+}
+
 docker_from_ubuntu() {
 	local a="$(get_arch $(uname -m))"
 
@@ -241,6 +254,8 @@ docker_from() {
 		docker_from_jenkins;;
 	openjdk)
 		docker_from_openjdk;;
+	opensuse)
+		docker_from_opensuse;;
 	ubuntu)
 		docker_from_ubuntu;;
 	*)
