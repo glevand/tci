@@ -1,0 +1,23 @@
+# SUSE RMT Repository Mirroring Tool Server.
+
+ARG DOCKER_FROM
+
+FROM ${DOCKER_FROM}
+
+ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
+
+RUN \
+	zypper --non-interactive ar \
+		-f https://download.opensuse.org/repositories/systemsmanagement:/SCC:/RMT/openSUSE_Leap_15.1/systemsmanagement:SCC:RMT.repo \
+	&& zypper --gpg-auto-import-keys refresh \
+	&& zypper --non-interactive in rmt-server \
+	&& zypper install -y dbus-1 systemd-sysvinit \
+	&& cp /usr/lib/systemd/system/dbus.service /etc/systemd/system/ \
+	&& sed -i 's/OOMScoreAdjust=-900//' /etc/systemd/system/dbus.service
+
+VOLUME ["/sys/fs/cgroup", "/run"]
+
+EXPOSE 80/tcp 443/tcp 4224/tcp
+
+CMD ["/sbin/init"]
