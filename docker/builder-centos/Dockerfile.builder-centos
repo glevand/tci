@@ -1,0 +1,66 @@
+# Image for compiling linux kernel, creating test rootfs, running QEMU.
+
+ARG DOCKER_FROM
+
+FROM ${DOCKER_FROM}
+
+#ENV LANG C.UTF-8
+#ENV LC_ALL C.UTF-8
+
+ENV TDD_BUILDER 1
+ENV TDD_CENTOS_BUILDER 1
+
+#RUN \
+#	ls -l /etc/yum.repos.d/; \
+#	ping -c2 -n 8.8.8.8; \
+#	cat /etc/yum.repos.d/CentOS-Base.repo; \
+#	cat /etc/yum.repos.d/CentOS-AppStream.repo
+
+RUN \
+	sed --in-place 's/mirrorlist/#mirrorlist/' /etc/yum.repos.d/CentOS-Base.repo \
+	&& sed --in-place 's/#baseurl/baseurl/' /etc/yum.repos.d/CentOS-Base.repo \
+	&& sed --in-place 's/mirrorlist/#mirrorlist/' /etc/yum.repos.d/CentOS-AppStream.repo \
+	&& sed --in-place 's/#baseurl/baseurl/' /etc/yum.repos.d/CentOS-AppStream.repo \
+	&& yum -y update \
+	&& yum -y clean all \
+	&& yum -y group install development
+
+RUN \
+	dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo \
+	&& dnf list docker-ce \
+	&& dnf install docker-ce --nobest -y \
+	&& yum -y install \
+		bash-completion \
+		dosfstools \
+		grub2-common \
+		ipmitool \
+		ncurses-devel \
+		OVMF \
+		rsync \
+		socat \
+		sudo \
+		tcpdump \
+		tftp \
+		vim \
+		wget \
+	&& systemctl disable firewalld
+
+CMD /bin/bash
+
+# FIXME: Missing:
+#		binfmt-support \
+#		ccache \
+#		dnsutils \
+#		isc-dhcp-server \
+#		net-tools \
+#		procps \
+#		qemu-utils \
+#		sbsigntool \
+#		inotify-tools \
+#		libncurses5-dev \
+#		netcat-openbsd \
+#		qemu-system-arm \
+#		qemu-system-x86-64 \
+#		qemu-user \
+#		texinfo \
+#		yum-util \

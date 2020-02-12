@@ -1,0 +1,32 @@
+# /etc/systemd/system/tdd-jenkins.service
+
+[Unit]
+Description=tdd-jenkins
+After=docker.service
+Requires=docker.service
+
+[Service]
+RestartSec=60s
+Restart=always
+
+Environment=SYSTEMD_LOG_LEVEL=debug
+
+RuntimeDirectory=tdd-store/%n
+#RuntimeDirectoryMode=0775
+
+ExecStartPre=-/bin/sh -c '/usr/bin/docker rm -f %n 2>/dev/null'
+
+ExecStart=/usr/bin/docker run --init --rm \
+	--name %n \
+	--network host \
+	--env "TDD_STORE=/run/tdd-store/%n" \
+	-v /run/tdd-store/%n:/run/tdd-store/%n \
+	-v jenkins_home:/var/jenkins_home \
+	-v /var/run/docker.sock:/var/run/docker.sock \
+	tdd-jenkins:1
+
+# FIXME: Need to make this return success on shutdown.
+ExecStop=/usr/bin/docker stop %n
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,15 @@
+# tftpd image for the TDD Project.
+
+ARG DOCKER_FROM
+
+FROM ${DOCKER_FROM}
+
+ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
+
+RUN apk add --update tftp-hpa \
+	&& rm -rf /tmp/* /var/tmp/*
+
+EXPOSE 69/udp
+
+CMD ["/usr/sbin/in.tftpd","--verbosity=3","--foreground","--secure","--ipv4","/tftproot"]

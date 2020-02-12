@@ -1,0 +1,21 @@
+# /etc/systemd/system/tdd-tftpd.service
+
+[Unit]
+Description=tdd-tftpd
+After=docker.service
+Requires=docker.service
+
+[Service]
+RestartSec=30s
+Restart=always
+
+ExecStartPre=/bin/bash -c '/usr/bin/docker inspect %n &> /dev/null \
+	&& /usr/bin/docker rm -f %n || :'
+
+ExecStart=/usr/bin/docker run --rm --name %n -p 69:69/udp \
+	-v /var/tftproot:/tftproot:ro tdd-tftpd:1
+
+ExecStop=/usr/bin/docker stop %n
+
+[Install]
+WantedBy=multi-user.target

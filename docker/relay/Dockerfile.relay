@@ -1,0 +1,26 @@
+# relay image for the TDD Project.
+
+ARG DOCKER_FROM
+
+FROM ${DOCKER_FROM}
+
+ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
+
+RUN apt-get update \
+	&& apt-get -y upgrade \
+	&& DEBIAN_FRONTEND=noninteractive apt-get -y install \
+		bash \
+		netcat-openbsd \
+		net-tools \
+		tcpdump \
+		vim \
+	&& DEBIAN_FRONTEND=noninteractive apt-get -y autoremove \
+	&& rm -rf /var/lib/apt/lists/* \
+	&& mv /usr/sbin/tcpdump /usr/bin/tcpdump
+
+COPY tdd-relay /usr/bin/
+
+EXPOSE 9600/tcp
+
+CMD ["/usr/bin/tdd-relay","--verbose","--port=9600"]

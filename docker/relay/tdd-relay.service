@@ -1,0 +1,22 @@
+# /etc/systemd/system/tdd-relay.service
+
+[Unit]
+Description=tdd-relay
+After=docker.service
+Requires=docker.service
+
+[Service]
+RestartSec=30s
+Restart=always
+
+ExecStartPre=/bin/bash -c '/usr/bin/docker inspect %n &> /dev/null \
+	&& /usr/bin/docker rm -f %n || :'
+
+ExecStart=/usr/bin/docker run --rm --name %n -p 9600:9600/tcp \
+	-v /etc/tdd-relay.conf:/etc/tdd-relay.conf \
+	@@docker-tag@@
+
+ExecStop=/usr/bin/docker stop %n
+
+[Install]
+WantedBy=multi-user.target
