@@ -5,6 +5,8 @@
 # FROM jenkins
 # RUN install-plugins.sh docker-slaves github-branch-source
 
+export PS4='\[\033[0;33m\]+$(basename ${BASH_SOURCE}):${LINENO}: \[\033[0;37m\]'
+
 set -o pipefail
 
 REF_DIR=${REF:-/usr/share/jenkins/ref/plugins}
@@ -83,7 +85,22 @@ doDownload() {
     fi
 
     echo "Downloading plugin: $plugin from $url"
+    ATTEMPTS=1
     retry_command curl "${CURL_OPTIONS:--sSfL}" --connect-timeout "${CURL_CONNECTION_TIMEOUT:-20}" --retry "${CURL_RETRY:-5}" --retry-delay "${CURL_RETRY_DELAY:-0}" --retry-max-time "${CURL_RETRY_MAX_TIME:-60}" "$url" -o "$jpi"
+    result=${?}
+    unset ATTEMPTS
+
+    if [[ ${result} -ne 0 ]]; then
+        HTTPS_MIRROR=${HTTPS_MIRROR:-"https://mirror.xmission.com/jenkins"}
+        mirror_url="${HTTPS_MIRROR}/plugins/$plugin/$version/${plugin}.hpi"
+
+        echo "Retry download: $plugin from ${mirror_url}"
+        retry_command curl "${CURL_OPTIONS:--sSfL}" --connect-timeout "${CURL_CONNECTION_TIMEOUT:-20}" --retry "${CURL_RETRY:-5}" --retry-delay "${CURL_RETRY_DELAY:-0}" --retry-max-time "${CURL_RETRY_MAX_TIME:-60}" "${mirror_url}" -o "$jpi"
+    fi
+
+    if [[ ${?} -ne 0 ]]; then
+        retry_command curl "${CURL_OPTIONS:--sSfL}" --connect-timeout "${CURL_CONNECTION_TIMEOUT:-20}" --retry "${CURL_RETRY:-5}" --retry-delay "${CURL_RETRY_DELAY:-0}" --retry-max-time "${CURL_RETRY_MAX_TIME:-60}" "$url" -o "$jpi"
+    fi
     return $?
 }
 
