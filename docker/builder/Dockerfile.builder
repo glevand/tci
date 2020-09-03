@@ -18,19 +18,24 @@ RUN echo 'deb-src http://deb.debian.org/debian buster main' >> /etc/apt/sources.
 		bash \
 		bash-completion \
 		binfmt-support \
+		bison \
 		ccache \
 		curl \
 		debootstrap \
 		dnsutils \
 		docker.io \
 		dosfstools \
+		flex \
 		gcc-x86-64-linux-gnu \
 		git \
 		grub-common \
 		inotify-tools \
 		ipmitool \
 		isc-dhcp-server \
+		libdnet-dev \
 		libncurses5-dev \
+		libpcap-dev \
+		libssl-dev \
 		netcat-openbsd \
 		net-tools \
 		ovmf \
