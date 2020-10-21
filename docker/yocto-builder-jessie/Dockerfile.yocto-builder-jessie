@@ -11,15 +11,21 @@ RUN echo 'deb-src http://deb.debian.org/debian jessie main' >> /etc/apt/sources.
 	&& apt-get update \
 	&& apt-get -y upgrade \
 	&& DEBIAN_FRONTEND=noninteractive apt-get -y install \
+		bc \
+		bison \
 		build-essential \
 		chrpath \
 		cpio \
 		debianutils \
 		diffstat \
+		flex \
 		gawk \
 		gcc-multilib \
 		git-core \
 		iputils-ping \
+		libelf-dev \
+		libncurses-dev \
+		libssl-dev \
 		python-pip \
 		python-ply \
 		python-progressbar \
