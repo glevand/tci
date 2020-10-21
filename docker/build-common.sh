@@ -349,7 +349,6 @@ if [[ ${purge} ]] && docker inspect --type image "${DOCKER_TAG}" &>/dev/null; th
 	docker rmi --force ${DOCKER_TAG}
 elif [[ ! ${rebuild} ]] && docker inspect --type image "${DOCKER_TAG}" &>/dev/null; then
 	echo "Docker image exists: ${DOCKER_TAG}" >&2
-	show_tag
 	do_build=
 fi
 
