@@ -100,8 +100,8 @@ set -e
 process_opts "${@}"
 
 container_name=${container_name:-"yocto-builder"}
-#docker_tag=${docker_tag:-"yocto-builder:latest"}
-docker_tag=${docker_tag:-"yocto-builder:1-amd64"}
+docker_tag=${docker_tag:-"glevand/yocto-builder:latest"}
+#docker_tag=${docker_tag:-"yocto-builder:1-amd64"}
 histfile=${histfile:-"$(pwd)/${container_name}--bash_history"}
 user_cmd=${user_cmd:-"/bin/bash"}
 
