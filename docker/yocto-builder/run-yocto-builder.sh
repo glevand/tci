@@ -179,6 +179,7 @@ eval "docker run \
 	-v /dev:/dev \
 	-e 'TERM=xterm-256color' \
 	-e 'HISTFILE=${histfile}' \
+	-e 'P_HOST=$(hostname)' \
 	${docker_bash_args} \
 	${docker_kvm_args} \
 	${docker_user_args} \
