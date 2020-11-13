@@ -180,6 +180,8 @@ eval "docker run \
 	-e 'TERM=xterm-256color' \
 	-e 'HISTFILE=${histfile}' \
 	-e 'P_HOST=$(hostname)' \
+	-v /etc/timezone:/etc/timezone:ro \
+	-v /etc/localtime:/etc/localtime:ro \
 	${docker_bash_args} \
 	${docker_kvm_args} \
 	${docker_user_args} \
