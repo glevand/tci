@@ -29,8 +29,8 @@ usage () {
 }
 
 process_opts() {
-	local short_opts="chvprt"
-	local long_opts="check,help,verbose,purge,rebuild,tag,install,start,enable"
+	local short_opts="hvprt"
+	local long_opts="help,verbose,purge,rebuild,tag,install,start,enable"
 
 	local opts
 	opts=$(getopt --options ${short_opts} --long ${long_opts} -n "${script_name}" -- "$@")
@@ -39,10 +39,6 @@ process_opts() {
 
 	while true ; do
 		case "${1}" in
-		-c | --check)
-			check=1
-			shift
-			;;
 		-h | --help)
 			usage=1
 			shift
@@ -240,45 +236,34 @@ docker_from_ubuntu() {
 
 docker_from() {
 	local from=${1}
+	local tag
 
 	case "${from}" in
 	alpine)
-		docker_from_alpine;;
+		tag=$(docker_from_alpine);;
 	centos)
-		docker_from_centos;;
+		tag=$(docker_from_centos);;
 	debian)
-		docker_from_debian;;
+		tag=$(docker_from_debian);;
 	debian_jessie)
-		docker_from_debian_jessie;;
+		tag=$(docker_from_debian_jessie);;
 	jenkins)
-		docker_from_jenkins;;
+		tag=$(docker_from_jenkins);;
 	openjdk)
-		docker_from_openjdk;;
+		tag=$(docker_from_openjdk);;
 	opensuse)
-		docker_from_opensuse;;
+		tag=$(docker_from_opensuse);;
 	ubuntu)
-		docker_from_ubuntu;;
+		tag=$(docker_from_ubuntu);;
 	*)
 		echo "${script_name}: ERROR: Bad project_from: '${from}'" >&2
 		exit 1
 	esac
+	echo "${tag}"
 }
 
 show_tag () {
 	echo "${DOCKER_TAG}"
-}
-
-run_shellcheck() {
-	local file=${1}
-
-	shellcheck="${shellcheck:-shellcheck}"
-
-	if ! test -x "$(command -v "${shellcheck}")"; then
-		echo "${script_name}: ERROR: Please install '${shellcheck}'." >&2
-		exit 1
-	fi
-
-	"${shellcheck}" "${file}"
 }
 
 #===============================================================================
@@ -304,16 +289,11 @@ SERVICE_FILE="${SERVICE_FILE:-${PROJECT_TOP}/tdd-${project_name}.service}"
 
 process_opts "${@}"
 
-DOCKER_FROM="${DOCKER_FROM:-$(docker_from ${project_from})}"
+DOCKER_FROM="${DOCKER_FROM:-$(docker_from "${project_from}")}"
 
 if [[ ${usage} ]]; then
 	usage
-	exit 0
-fi
-
-if [[ ${check} ]]; then
-	run_shellcheck "${0}"
-	trap "on_exit 'Success'" EXIT
+	trap - EXIT
 	exit 0
 fi
 
@@ -356,6 +336,8 @@ cd "${PROJECT_TOP}"
 
 if [[ ${do_build} ]]; then
 	echo "${script_name}: Building docker image: ${DOCKER_TAG}" >&2
+
+	docker pull "${DOCKER_FROM}"
 
 	docker_build_setup
 
