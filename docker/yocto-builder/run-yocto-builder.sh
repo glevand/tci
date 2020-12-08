@@ -101,7 +101,6 @@ process_opts "${@}"
 
 container_name=${container_name:-"yocto-builder"}
 docker_tag=${docker_tag:-"glevand/yocto-builder:latest"}
-#docker_tag=${docker_tag:-"yocto-builder:1-amd64"}
 histfile=${histfile:-"$(pwd)/${container_name}--bash_history"}
 user_cmd=${user_cmd:-"/bin/bash"}
 
@@ -130,7 +129,7 @@ ansi_blue='\[\e[0;34m\]'
 ansi_teal='\[\e[0;36m\]'
 
 cp "${HOME}/.bashrc" "${tmp_dir}/"
-echo "PS1='${ansi_blue}\u@\h:${ansi_reset}\w\$ '" > "${tmp_dir}/.bashrc"
+echo "PS1='${ansi_green}\h@\${P_HOST}:${ansi_reset}\w\$ '" > "${tmp_dir}/.bashrc"
 
 unset docker_user_args
 if [[ ${as_root} ]]; then

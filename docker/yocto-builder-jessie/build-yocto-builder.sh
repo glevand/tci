@@ -10,7 +10,7 @@ project_from="debian_jessie"
 project_description="Image that contains tools for working with old, end-of-life Yocto."
 
 PROJECT_TOP="${DOCKER_TOP}/${project_name}"
-VERSION=${VERSION:-"1"}
+VERSION=${VERSION:-"2"}
 DOCKER_NAME=${DOCKER_NAME:-"${project_name}"}
 
 build_on_exit() {

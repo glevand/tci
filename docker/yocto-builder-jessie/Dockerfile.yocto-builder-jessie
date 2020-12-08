@@ -11,40 +11,44 @@ RUN echo 'deb-src http://deb.debian.org/debian jessie main' >> /etc/apt/sources.
 	&& apt-get update \
 	&& apt-get -y upgrade \
 	&& DEBIAN_FRONTEND=noninteractive apt-get -y install \
+		apt-utils \
+		autoconf \
+		bash \
+		bash-completion \
 		bc \
 		bison \
 		build-essential \
+		ccache \
 		chrpath \
+		cifs-utils \
 		cpio \
+		curl \
 		debianutils \
 		diffstat \
 		dos2unix \
 		flex \
 		gawk \
 		gcc-multilib \
-		git-core \
+		git \
+		git-remote-gcrypt \
 		iputils-ping \
 		libelf-dev \
 		libncurses-dev \
 		libssl-dev \
+		libtspi-dev \
+		locales \
 		python-pip \
 		python-ply \
 		python-progressbar \
 		socat \
+		subversion \
+		sudo \
 		texinfo \
 		unzip \
+		vim \
 		wget \
 		xz-utils \
 		\
-		bash \
-		bash-completion \
-		ccache \
-		diffstat \
-		curl \
-		git \
-		locales \
-		sudo \
-		vim \
 	&& sed -i 's/^# *\(en_US.UTF-8\)/\1/' /etc/locale.gen \
 	&& locale-gen \
 	&& update-locale LANG=en_US.UTF-8
