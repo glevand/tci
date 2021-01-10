@@ -170,10 +170,10 @@ fi
 
 md5sum=${md5sum:-"md5sum"}
 openssl=${openssl:-"openssl"}
-sbsign=${sbsign:-"sbsign"}
-sbverify=${sbverify:-"sbverify"}
+#sbsign=${sbsign:-"sbsign"}
+#sbverify=${sbverify:-"sbverify"}
 
-if ! check_progs " ${md5sum} ${openssl} ${sbsign} ${sbverify}"; then
+if ! check_progs " ${md5sum} ${openssl}"; then
 	exit 1
 fi
 
