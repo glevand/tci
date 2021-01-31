@@ -75,6 +75,42 @@ test_sec_to_min() {
 	fi
 }
 
+parse_date() {
+	local str=${1}
+	local -n _parse_date__date=${2}
+	local -n _parse_date__day=${3}
+	local -n _parse_date__time=${4}
+
+	local regex_date="(([[:digit:]]{4}\.[[:digit:]]{2}\.[[:digit:]]{2})-(([[:digit:]]{2}\.){2}[[:digit:]]{2}))"
+
+	if [[ ! "${str}" =~ ${regex_date} ]]; then
+		echo "${FUNCNAME[0]}: No match" >&2
+		return 1
+	fi
+
+	_parse_date__date="${BASH_REMATCH[1]}"
+	_parse_date__day="${BASH_REMATCH[2]}"
+	_parse_date__time="${BASH_REMATCH[3]}"
+
+	if [[ ${verbose} ]]; then
+		echo "${FUNCNAME[0]}: str:  '${str}'" >&2
+		echo "${FUNCNAME[0]}: date: '${_parse_date__date}'" >&2
+		echo "${FUNCNAME[0]}: day:  '${_parse_date__day}'" >&2
+		echo "${FUNCNAME[0]}: time: '${_parse_date__time}'" >&2
+	fi
+
+	return 0
+}
+
+test_parse_date() {
+	local date
+	local day
+	local time
+
+	verbose=1
+	parse_date "${script_name}-$(date +%Y.%m.%d-%H.%M.%S)" date day time
+}
+
 directory_size_bytes() {
 	local dir=${1}
 
