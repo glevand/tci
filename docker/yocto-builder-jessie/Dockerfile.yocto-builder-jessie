@@ -26,6 +26,7 @@ RUN echo 'deb-src http://deb.debian.org/debian jessie main' >> /etc/apt/sources.
 		debianutils \
 		diffstat \
 		dos2unix \
+		dosfstools \
 		flex \
 		gawk \
 		gcc-multilib \
@@ -37,6 +38,7 @@ RUN echo 'deb-src http://deb.debian.org/debian jessie main' >> /etc/apt/sources.
 		libssl-dev \
 		libtspi-dev \
 		locales \
+		parallel \
 		python-pip \
 		python-ply \
 		python-progressbar \
