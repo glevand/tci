@@ -7,11 +7,12 @@ usage () {
 	echo "${script_name} - ${project_description}" >&2
 	echo "Usage: ${script_name} [flags]" >&2
 	echo "Option flags:" >&2
-	echo "  -h --help     - Show this help and exit." >&2
 	echo "  -p --purge    - Remove existing docker image and rebuild." >&2
 	echo "  -r --rebuild  - Rebuild existing docker image." >&2
 	echo "  -t --tag      - Print Docker tag to stdout and exit." >&2
+	echo "  -h --help     - Show this help and exit." >&2
 	echo "  -v --verbose  - Verbose execution." >&2
+	echo "  -g --debug    - Extra verbose execution." >&2
 	echo "  --install     - Install systemd service files." >&2
 	echo "  --start       - Start systemd services." >&2
 	echo "  --enable      - Enable systemd services." >&2
@@ -29,8 +30,8 @@ usage () {
 }
 
 process_opts() {
-	local short_opts="hvprt"
-	local long_opts="help,verbose,purge,rebuild,tag,install,start,enable"
+	local short_opts="prthvg"
+	local long_opts="purge,rebuild,tag,help,verbose,debug,install,start,enable"
 
 	local opts
 	opts=$(getopt --options ${short_opts} --long ${long_opts} -n "${script_name}" -- "$@")
@@ -39,15 +40,6 @@ process_opts() {
 
 	while true ; do
 		case "${1}" in
-		-h | --help)
-			usage=1
-			shift
-			;;
-		-v | --verbose)
-			verbose=1
-			set -x
-			shift
-			;;
 		-p | --purge)
 			purge=1
 			shift
@@ -58,6 +50,20 @@ process_opts() {
 			;;
 		-t | --tag)
 			tag=1
+			shift
+			;;
+		-h | --help)
+			usage=1
+			shift
+			;;
+		-v | --verbose)
+			verbose=1
+			shift
+			;;
+		-g | --debug)
+			set -x
+			verbose=1
+			debug=1
 			shift
 			;;
 		--install)

@@ -10,7 +10,7 @@ project_from="debian"
 project_description="Builds a docker image that contains tools for working with Yocto."
 
 PROJECT_TOP="${DOCKER_TOP}/${project_name}"
-VERSION=${VERSION:-"2"}
+VERSION=${VERSION:-"3"}
 DOCKER_NAME=${DOCKER_NAME:-"${project_name}"}
 
 build_on_exit() {

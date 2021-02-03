@@ -30,6 +30,7 @@ RUN echo 'deb-src http://deb.debian.org/debian buster main' >> /etc/apt/sources.
 		dnsutils \
 		docker.io \
 		dos2unix \
+		dosfstools \
 		flex \
 		gawk \
 		gcc-multilib \
@@ -43,6 +44,7 @@ RUN echo 'deb-src http://deb.debian.org/debian buster main' >> /etc/apt/sources.
 		libsdl2-dev \
 		libssl-dev \
 		libtspi-dev \
+		parallel \
 		pylint3 \
 		python3 \
 		python3-git \
