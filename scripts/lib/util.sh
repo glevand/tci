@@ -92,7 +92,7 @@ parse_date() {
 	_parse_date__day="${BASH_REMATCH[2]}"
 	_parse_date__time="${BASH_REMATCH[3]}"
 
-	if [[ ${verbose} ]]; then
+	if [[ ${debug} ]]; then
 		echo "${FUNCNAME[0]}: str:  '${str}'" >&2
 		echo "${FUNCNAME[0]}: date: '${_parse_date__date}'" >&2
 		echo "${FUNCNAME[0]}: day:  '${_parse_date__day}'" >&2
@@ -107,17 +107,17 @@ test_parse_date() {
 	local day
 	local time
 
-	verbose=1
+	debug=1
 	parse_date "${script_name}-$(date +%Y.%m.%d-%H.%M.%S)" date day time
 }
 
-parse_date_2() {
+parse_date_git() {
 	local str=${1}
-	local -n _parse_date_2__day=${2}
-	local -n _parse_date_2__month=${3}
-	local -n _parse_date_2__date=${4}
-	local -n _parse_date_2__year=${5}
-	local -n _parse_date_2__time=${6}
+	local -n _parse_date_git__day=${2}
+	local -n _parse_date_git__month=${3}
+	local -n _parse_date_git__date=${4}
+	local -n _parse_date_git__year=${5}
+	local -n _parse_date_git__time=${6}
 
 	local regex_day="[[:alpha:]]{3}"
 	local regex_month="[[:alpha:]]{3}"
@@ -125,31 +125,31 @@ parse_date_2() {
 	local regex_time="([[:digit:]]{2}:){2}[[:digit:]]{2}"
 	local regex_year="[[:digit:]]{4}"
 
-	local regex_full="^(${regex_day}) (${regex_month}) (${regex_date}) (${regex_time}) (${regex_year})"
+	local regex_full="^(${regex_day}) (${regex_month})  ?(${regex_date}) (${regex_time}) (${regex_year})"
 
 	if [[ ! "${str}" =~ ${regex_full} ]]; then
 		echo "ERROR: No match '${str}'" >&2
 		return 1
 	fi
 
-	_parse_date_2__day="${BASH_REMATCH[1]}"
-	_parse_date_2__month="${BASH_REMATCH[2]}"
-	_parse_date_2__date="${BASH_REMATCH[3]}"
-	_parse_date_2__time="${BASH_REMATCH[4]}"
-	_parse_date_2__year="${BASH_REMATCH[6]}"
+	_parse_date_git__day="${BASH_REMATCH[1]}"
+	_parse_date_git__month="${BASH_REMATCH[2]}"
+	_parse_date_git__date="${BASH_REMATCH[3]}"
+	_parse_date_git__time="${BASH_REMATCH[4]}"
+	_parse_date_git__year="${BASH_REMATCH[6]}"
 
 	if [[ ${debug} ]]; then
 		echo "${FUNCNAME[0]}: str:   '${str}'" >&2
-		echo "${FUNCNAME[0]}: day:   '${_parse_date_2__day}'" >&2
-		echo "${FUNCNAME[0]}: month: '${_parse_date_2__month}'" >&2
-		echo "${FUNCNAME[0]}: date:  '${_parse_date_2__date}'" >&2
-		echo "${FUNCNAME[0]}: year:  '${_parse_date_2__year}'" >&2
-		echo "${FUNCNAME[0]}: time:  '${_parse_date_2__time}'" >&2
+		echo "${FUNCNAME[0]}: day:   '${_parse_date_git__day}'" >&2
+		echo "${FUNCNAME[0]}: month: '${_parse_date_git__month}'" >&2
+		echo "${FUNCNAME[0]}: date:  '${_parse_date_git__date}'" >&2
+		echo "${FUNCNAME[0]}: year:  '${_parse_date_git__year}'" >&2
+		echo "${FUNCNAME[0]}: time:  '${_parse_date_git__time}'" >&2
 	fi
 	return 0
 }
 
-test_parse_date_2() {
+test_parse_date_git() {
 	local day
 	local month
 	local date
@@ -157,16 +157,18 @@ test_parse_date_2() {
 	local year
 
 	debug=1
-	parse_date_2 "Wed Jan 8 13:44:58 2020 -0800" day month date year time
-	parse_date_2 "Sun Feb 28 11:26:06 2021 -0800" day month date year time
+	parse_date_git "Wed Jan 8 13:44:58 2020 -0800" day month date year time
+	parse_date_git "Sun Feb 28 11:26:06 2021 -0800" day month date year time
+	parse_date_git "$(date '+%a %b %e %X %Y %z')" day month date year time
+	parse_date_git "$(date '+%c %z')" day month date year time
 }
 
 parse_date_iso_8601() {
 	local str=${1}
-	local -n parse_date_iso_8601__year=${2}
-	local -n parse_date_iso_8601__month=${3}
-	local -n parse_date_iso_8601__day=${4}
-	local -n parse_date_iso_8601__time=${5}
+	local -n _parse_date_iso_8601__year=${2}
+	local -n _parse_date_iso_8601__month=${3}
+	local -n _parse_date_iso_8601__day=${4}
+	local -n _parse_date_iso_8601__time=${5}
 
 	local regex_year="[[:digit:]]{4}"
 	local regex_month="[[:digit:]]{2}"
@@ -180,17 +182,17 @@ parse_date_iso_8601() {
 		return 1
 	fi
 
-	parse_date_iso_8601__year="${BASH_REMATCH[1]}"
-	parse_date_iso_8601__month="${BASH_REMATCH[2]}"
-	parse_date_iso_8601__day="${BASH_REMATCH[3]}"
-	parse_date_iso_8601__time="${BASH_REMATCH[4]}"
+	_parse_date_iso_8601__year="${BASH_REMATCH[1]}"
+	_parse_date_iso_8601__month="${BASH_REMATCH[2]}"
+	_parse_date_iso_8601__day="${BASH_REMATCH[3]}"
+	_parse_date_iso_8601__time="${BASH_REMATCH[4]}"
 
 	if [[ ${debug} ]]; then
 		echo "${FUNCNAME[0]}: str:   '${str}'" >&2
-		echo "${FUNCNAME[0]}: year:  '${parse_date_iso_8601__year}'" >&2
-		echo "${FUNCNAME[0]}: month: '${parse_date_iso_8601__month}'" >&2
-		echo "${FUNCNAME[0]}: day:   '${parse_date_iso_8601__day}'" >&2
-		echo "${FUNCNAME[0]}: time:  '${parse_date_iso_8601__time}'" >&2
+		echo "${FUNCNAME[0]}: year:  '${_parse_date_iso_8601__year}'" >&2
+		echo "${FUNCNAME[0]}: month: '${_parse_date_iso_8601__month}'" >&2
+		echo "${FUNCNAME[0]}: day:   '${_parse_date_iso_8601__day}'" >&2
+		echo "${FUNCNAME[0]}: time:  '${_parse_date_iso_8601__time}'" >&2
 	fi
 	return 0
 }
