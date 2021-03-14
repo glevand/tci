@@ -107,7 +107,7 @@ on_exit() {
 #===============================================================================
 export PS4='\[\e[0;33m\]+ ${BASH_SOURCE##*/}:${LINENO}:(${FUNCNAME[0]:-"?"}):\[\e[0m\] '
 script_name="${0##*/}"
-SCRIPTS_TOP=${SCRIPTS_TOP:-"$(cd "${BASH_SOURCE%/*}" && pwd)"}
+SCRIPTS_TOP=${SCRIPTS_TOP:-"$(cd "${BASH_SOURCE%/*}/.." && pwd)"}
 
 start_time="$(date +%Y.%m.%d-%H.%M.%S)"
 SECONDS=0
@@ -191,6 +191,8 @@ if [[ ${initrd} ]]; then
 	objcopy_args+=" --add-section .initrd='${initrd}'"
 	objcopy_args+=" --change-section-vma .initrd='${initrd_start}'"
 fi
+
+echo "${script_name}: INFO: Preparing '${out_file}'" >&2
 
 eval "${objcopy} ${objcopy_args} ${efi_stub} ${out_file}"
 
